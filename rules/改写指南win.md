@@ -1,5 +1,5 @@
-# 改写指南：在windows10，显卡rtx 5070 12G，cpu12600KF上运行：
-### 将s5e10-tabm-tuned-further.ipynb文件内容改写成一个python文件代码，并存储到新文件中
-### 模型的训练和校验数据均在同级目录playground-series-s5e10下，请将代码内的kaggle路径改为本地路径
+# 改写指南：在windows11，独立显卡rtx 5070 12G，cpu:12600KF上运行：
+### 将ipynb文件内容改写成一个python文件代码，并存储到新文件中
+<!-- ### 模型的训练和校验数据均在同级目录playground-series-s5e10下，请将代码内的kaggle路径改为本地路径 -->
 ### 改写的python需要支持在本地进行训练，可获取本机相关配置进行改写代码
 ### 输出运行的命令文件 docs/运行命令win.md
