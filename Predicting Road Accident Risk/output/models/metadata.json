@@ -1,0 +1,65 @@
+{
+  "FEATURES": [
+    "road_type",
+    "num_lanes",
+    "curvature",
+    "speed_limit",
+    "lighting",
+    "weather",
+    "road_signs_present",
+    "public_road",
+    "time_of_day",
+    "holiday",
+    "school_season",
+    "num_reported_accidents",
+    "Meta"
+  ],
+  "CATS": [
+    "road_type",
+    "lighting",
+    "weather",
+    "road_signs_present",
+    "public_road",
+    "time_of_day",
+    "holiday",
+    "school_season"
+  ],
+  "BASE": [
+    "road_type",
+    "num_lanes",
+    "curvature",
+    "speed_limit",
+    "lighting",
+    "weather",
+    "road_signs_present",
+    "public_road",
+    "time_of_day",
+    "holiday",
+    "school_season",
+    "num_reported_accidents"
+  ],
+  "ORIG": [],
+  "META": [
+    "Meta"
+  ],
+  "TARGET": "accident_risk",
+  "params": {
+    "batch_size": "auto",
+    "patience": 16,
+    "allow_amp": false,
+    "arch_type": "tabm-mini",
+    "tabm_k": 32,
+    "gradient_clipping_norm": 1.0,
+    "share_training_batches": false,
+    "lr": 0.000624068703424289,
+    "weight_decay": 0.0019090968357478807,
+    "n_blocks": 5,
+    "d_block": 432,
+    "dropout": 0.0,
+    "num_emb_type": "pwl",
+    "d_embedding": 24,
+    "num_emb_n_bins": 112
+  },
+  "N_SPLITS": 5,
+  "USE_ORIG": false
+}

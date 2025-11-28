@@ -1,0 +1,40 @@
+FROM python:3.9-slim
+
+WORKDIR /app
+
+# 安装系统依赖
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# 复制应用文件
+COPY road_accident_risk.py /app/
+COPY api_server.py /app/
+
+# 安装 PyTorch CPU 版本（模型已转换为 CPU 格式）
+RUN pip install --no-cache-dir \
+    torch \
+    torchvision \
+    torchaudio \
+    --index-url https://download.pytorch.org/whl/cpu
+
+# 安装其他依赖
+RUN pip install --no-cache-dir \
+    pandas \
+    numpy \
+    scikit-learn \
+    pytabkit \
+    flask
+
+# 设置环境变量
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+# 确保只使用 CPU（模型已转换为 CPU 格式）
+ENV CUDA_VISIBLE_DEVICES=""
+
+EXPOSE 6000
+
+# 默认命令（可以在 docker-compose 中覆盖）
+CMD ["python", "api_server.py", "--model-dir", "/app/models", "--host", "0.0.0.0", "--port", "6000"]
+

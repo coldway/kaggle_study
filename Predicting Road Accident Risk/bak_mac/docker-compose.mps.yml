@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  training:
+    build:
+      context: .
+      # ⚠️ Apple Silicon MPS 模式
+      # 重要：MPS 在 Docker 容器中不可用！
+      # MPS 需要 macOS 系统级别的 Metal API，而 Docker 容器运行在 Linux 环境中
+      # 因此，在容器中 MPS 永远不可用，代码会自动使用 CPU
+      # 
+      # 强烈建议：对于 Apple Silicon，直接在 macOS 上运行 Python 脚本
+      # 命令：python road_accident_risk_docker.py
+      dockerfile: Dockerfile.mps
+    image: road-accident-risk:mps
+    container_name: road-accident-risk-training-mps
+    volumes:
+      # 挂载数据目录（只读）
+      - ./playground-series-s5e10:/app/playground-series-s5e10:ro
+      # 挂载输出目录（可写）
+      - ./output:/app/output
+    environment:
+      - PYTHONUNBUFFERED=1
+      # ⚠️ MPS 在 Docker 容器中不可用
+      # 代码会自动检测 MPS，如果不可用会使用 CPU
+    # ⚠️ 重要：Apple Silicon MPS 在 Docker 容器中永远不可用
+    # MPS 需要 macOS 系统级别的 Metal API，而 Docker 容器运行在 Linux 环境中
+    # 强烈建议直接在 macOS 上运行 Python 脚本
+    command: python road_accident_risk_docker.py
+    # 如果需要指定参数，可以这样写：
+    # command: python road_accident_risk_docker.py --data-dir ./playground-series-s5e10 --output-dir ./output --skip-install
+    restart: "no"
+    stdin_open: true
+    tty: true
+    # 对于 Apple Silicon，建议使用 platform
+    platform: linux/arm64
+

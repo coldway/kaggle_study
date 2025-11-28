@@ -1,0 +1,29 @@
+FROM python:3.9-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY road_accident_risk.py .
+
+RUN pip install --no-cache-dir \
+    torch \
+    torchvision \
+    torchaudio \
+    --index-url https://download.pytorch.org/whl/cu118
+
+RUN pip install --no-cache-dir \
+    pandas \
+    numpy \
+    scikit-learn \
+    pytabkit \
+    flask
+
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+
+CMD ["python", "road_accident_risk.py"]
+

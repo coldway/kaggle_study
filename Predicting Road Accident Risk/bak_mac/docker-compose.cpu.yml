@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  training:
+    build:
+      context: .
+      # CPU 模式：使用 CPU 版本的 Dockerfile
+      # 适用于所有平台（Linux, macOS, Windows）
+      # 对于 Apple Silicon，也可以使用 docker-compose.mps.yml
+      dockerfile: Dockerfile
+    image: road-accident-risk:cpu
+    container_name: road-accident-risk-training-cpu
+    volumes:
+      # 挂载数据目录（只读）
+      - ./playground-series-s5e10:/app/playground-series-s5e10:ro
+      # 挂载输出目录（可写）
+      - ./output:/app/output
+    environment:
+      - PYTHONUNBUFFERED=1
+      # 强制使用 CPU
+      - CUDA_VISIBLE_DEVICES=
+    # CPU 模式：不包含 GPU 配置
+    command: python road_accident_risk_docker.py
+    # 如果需要指定参数，可以这样写：
+    # command: python road_accident_risk_docker.py --data-dir ./playground-series-s5e10 --output-dir ./output --skip-install
+    restart: "no"
+    stdin_open: true
+    tty: true
+

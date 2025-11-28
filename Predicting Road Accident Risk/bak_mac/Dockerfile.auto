@@ -1,0 +1,39 @@
+FROM python:3.9-slim
+
+# 设置工作目录
+WORKDIR /app
+
+# 安装系统依赖
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# 复制代码文件
+COPY road_accident_risk_docker.py .
+
+# 安装 PyTorch - 同时支持 CPU 和 GPU
+# 先安装 CPU 版本（较小），运行时如果检测到 GPU 会自动使用
+# 如果需要 GPU 支持，可以在运行时安装 GPU 版本的 PyTorch
+# 或者使用多阶段构建，但这里为了简化，我们安装 CPU 版本
+# 实际运行时，Python 代码会自动检测并使用 GPU（如果可用）
+RUN pip install --no-cache-dir \
+    torch \
+    torchvision \
+    torchaudio \
+    --index-url https://download.pytorch.org/whl/cpu
+
+# 安装其他依赖
+RUN pip install --no-cache-dir \
+    pandas \
+    numpy \
+    scikit-learn \
+    pytabkit
+
+# 设置环境变量
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# 默认命令
+CMD ["python", "road_accident_risk_docker.py"]
+

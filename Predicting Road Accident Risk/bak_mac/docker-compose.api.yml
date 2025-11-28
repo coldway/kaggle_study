@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    image: road-accident-risk-api:latest
+    container_name: road-accident-risk-api
+    volumes:
+      # 挂载模型目录（只读）
+      - ./output/models:/app/models:ro
+      # 挂载原始数据文件（如果存在，只读）
+      - ./playground-series-s5e10:/app/data:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+      # 模型目录路径（容器内路径）
+      - MODEL_DIR=/app/models
+      # 原始数据路径（可选）
+      - ORIG_DATA_PATH=/app/data/synthetic_road_accidents_100k.csv
+    ports:
+      # 映射端口：主机端口:容器端口
+      - "5000:5000"
+    command: python road_accident_risk_mac.py --mode serve --model-dir /app/models --host 0.0.0.0 --port 5000 --orig-data-path /app/data/synthetic_road_accidents_100k.csv
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+

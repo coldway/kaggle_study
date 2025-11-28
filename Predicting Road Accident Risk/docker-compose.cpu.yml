@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  training:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: road-accident-risk:latest
+    container_name: road-accident-risk-training
+    volumes:
+      - ./playground-series-s5e10:/app/playground-series-s5e10:ro
+      - ./output:/app/output
+    environment:
+      - PYTHONUNBUFFERED=1
+      - CUDA_VISIBLE_DEVICES=
+    command: python road_accident_risk.py --data-dir ./playground-series-s5e10 --output-dir ./output --skip-install
+    restart: "no"
+    stdin_open: true
+    tty: true
+

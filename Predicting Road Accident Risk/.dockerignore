@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# 虚拟环境
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 数据文件（不复制到镜像，使用挂载）
+playground-series-s5e10/
+output/
+
+# Git
+.git/
+.gitignore
+
+# 文档
+docs/
+*.md
+
+# 其他
+.DS_Store
+*.log
+

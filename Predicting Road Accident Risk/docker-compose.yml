@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  training:
+    build:
+      context: .
+      dockerfile: Dockerfile.gpu
+    image: road-accident-risk:latest
+    container_name: road-accident-risk-training
+    volumes:
+      - ./playground-series-s5e10:/app/playground-series-s5e10:ro
+      - ./output:/app/output
+    environment:
+      - PYTHONUNBUFFERED=1
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    command: python road_accident_risk.py --data-dir ./playground-series-s5e10 --output-dir ./output --skip-install
+    restart: "no"
+    stdin_open: true
+    tty: true
+

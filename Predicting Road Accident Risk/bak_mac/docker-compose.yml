@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  training:
+    build:
+      context: .
+      # 使用 GPU Dockerfile (NVIDIA CUDA)
+      # 如果系统不支持 GPU，deploy 部分会被自动忽略，但建议使用 docker-compose.cpu.yml
+      # 对于 Apple Silicon，请使用 docker-compose.mps.yml 或直接在 macOS 上运行
+      # 或者使用自动检测脚本: ./docker-run.sh
+      dockerfile: Dockerfile.gpu
+    image: road-accident-risk:latest
+    container_name: road-accident-risk-training
+    volumes:
+      # 挂载数据目录（只读）
+      - ./playground-series-s5e10:/app/playground-series-s5e10:ro
+      # 挂载输出目录（可写）
+      - ./output:/app/output
+    environment:
+      - PYTHONUNBUFFERED=1
+      # 如果需要强制使用 CPU，取消下面的注释
+      # - CUDA_VISIBLE_DEVICES=
+    # GPU 支持配置
+    # 注意：如果系统不支持 GPU，这部分会被忽略，但可能会导致错误
+    # 建议使用 docker-run.sh 脚本自动检测，或使用 docker-compose.cpu.yml
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    command: python road_accident_risk_docker.py
+    # 如果需要指定参数，可以这样写：
+    # command: python road_accident_risk_docker.py --data-dir ./playground-series-s5e10 --output-dir ./output --skip-install
+    restart: "no"
+    stdin_open: true
+    tty: true
+

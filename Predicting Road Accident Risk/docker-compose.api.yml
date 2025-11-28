@@ -1,0 +1,26 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    image: road-accident-risk-api:latest
+    container_name: road-accident-risk-api
+    volumes:
+      - ./output/models:/app/models:ro
+      - ./playground-series-s5e10:/app/data:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+      # 强制使用 CPU（模型已转换为 CPU 格式）
+      - CUDA_VISIBLE_DEVICES=""
+    ports:
+      - "6000:6000"
+    command: python api_server.py --model-dir /app/models --host 0.0.0.0 --port 6000 --orig-data-path /app/data/synthetic_road_accidents_100k.csv
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
